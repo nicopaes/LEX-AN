@@ -17,6 +17,7 @@ int lineno = 1; // initialize to 1
 ENTRADA { return ENTRADA; }
 SAIDA { return SAIDA; }
 FIM { return FIM; }
+END { return END; }
 FACA {return FACA; }
 INC { return INC; }
 ZERA { return ZERA; }

@@ -32,6 +32,7 @@ void insert(char *name, int len, int type, int lineno){
         l->lines->lineno = lineno;
         l->lines->next = NULL;
         l->next = hash_table[hashval];
+        l->st_dclr = 0;
         hash_table[hashval] = l; 
         printf("Inserted %s for the first time\n", name); // error checking
     }
@@ -60,6 +61,15 @@ int changeType(char* name, int newType)
     if(l == NULL) return 0;
 
     l->st_type = newType;
+    return 1;
+}
+
+int changeWasDclr(char* name)
+{
+    list_t* l = lookup(name);
+    if(l == NULL) return 0;
+
+    l->st_dclr = 1;
     return 1;
 }
 

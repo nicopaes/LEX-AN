@@ -60,7 +60,8 @@ extern int yydebug;
     COMMA = 266,
     LPAR = 267,
     RPAR = 268,
-    EQUAL = 269
+    EQUAL = 269,
+    END = 270
   };
 #endif
 
@@ -68,11 +69,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 29 "prov.y"
+#line 30 "prov.y"
 
     char* name;
 
-#line 76 "prov.tab.h"
+#line 77 "prov.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
