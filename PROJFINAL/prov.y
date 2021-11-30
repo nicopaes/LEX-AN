@@ -33,10 +33,10 @@
 %%
 
 
-Program: ENTRADA varlist SAIDA varlist cmds END
+Program: ENTRADA {change_isEntrada(1);} varlist SAIDA {change_isEntrada(0);} varlist cmds END
 {
     printf("Compilação sucesso\n");
-    char* idvar = $<name>4;
+    char* idvar = $<name>6;
     push_ret(idvar);
 };
 //------------ TODO AIDA varlist{push_var();}
@@ -62,7 +62,6 @@ cmd: ENQUANTO id FACA
 {
     char* idvar = $2;
     push_enq(idvar);
-    printf("|||||||||||  %s",idvar);
 } cmds FIM {push_fim();}
 ;
 //------------
@@ -82,7 +81,7 @@ cmd: id EQUAL id
 } | ZERA LPAR id RPAR
 {
     char* idVar = $3;
-    push_inc(idVar);
+    push_zera(idVar);
 }
 ;
 %%
@@ -92,6 +91,8 @@ FILE* f1;
 char st[50][50];
 int bottom = 1;
 int isEntrada = 0;
+char* retVar;
+
 
 int main(int argc, char *argv[])
 {
@@ -106,7 +107,7 @@ int main(int argc, char *argv[])
     int parse;
     // open input file
     yyin = fopen(argv[1], "r");
-    f1 = fopen("output","w");
+    f1 = fopen("output.c","w");
     push_start();
 
     // sintax analysis
@@ -154,6 +155,7 @@ push_end()
 
 push_ret(char* varName)
 {
+    fprintf(f1,"    printf(\"Resultado final %%d\\n\",%s);\n",varName);
     fprintf(f1,"    return %s;\n",varName);
 }
 
@@ -170,10 +172,17 @@ push_var(char* varName)
     {
         if(l->st_dclr == 0)
         {
-           fprintf(f1,"    int %s = 0;\n",varName); 
-        //    fprintf(f1,"    int %s;\n",varName); 
-        //    fprintf(f1,"    printf(\"Entre com o valor de %s\");\n",varName); 
-        //    fprintf(f1,"    scanf(\"%d\",&%s);\n",varName); 
+           if(isEntrada)
+           {
+                fprintf(f1,"    int %s;\n",varName); 
+                fprintf(f1,"    printf(\"Entre com o valor de %s \\n\");\n",varName); 
+                fprintf(f1,"    scanf(\"%%d\",&%s);\n",varName); 
+                fprintf(f1,"    printf(\"Valor de %s lido %%d\\n\",%s);\n",varName,varName); 
+           }
+           else
+           {
+              fprintf(f1,"    int %s = 0;\n",varName);  
+           }           
         }
         
         if(changeWasDclr(varName))
@@ -199,10 +208,21 @@ push_zera(char* varName)
 
 push_enq(char* varName)
 {
-    fprintf(f1,"    for(int i = 0;i < %s;i++)\n    {\n",varName);
+    fprintf(f1,"    int i = %s;\n", varName);
+    fprintf(f1,"    while(i != 0)\n    {\n\n",varName);
 }
 
 push_fim()
 {
-    fprintf(f1,"    }\n");
+    fprintf(f1,"    i--;\n    }\n");
+}
+
+push_retVar(char* varName)
+{
+    retVar = varName;
+}
+
+change_isEntrada(int value)
+{
+    isEntrada = value;
 }
