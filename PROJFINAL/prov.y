@@ -55,18 +55,16 @@ varlist: id
 }
 ;
 //------------
-cmds: cmd 
-{
-    printf("KAKAKAKKAKAKA\n\n");
-} cmds | cmd
-
+cmds: cmd cmds | cmd 
 ;
 //------------
-cmd: ENQUANTO id FACA cmds FIM
+cmd: ENQUANTO id FACA 
 {
     char* idvar = $2;
     push_enq(idvar);
-};
+    printf("|||||||||||  %s",idvar);
+} cmds FIM {push_fim();}
+;
 //------------
 cmd: id EQUAL id 
 {
@@ -78,6 +76,7 @@ cmd: id EQUAL id
 } | INC LPAR id RPAR
 {
     char* idVar = $3;
+    printf("INC: %s++\n", idVar);
     push_inc(idVar);
 
 } | ZERA LPAR id RPAR
@@ -92,7 +91,7 @@ int top = 0;
 FILE* f1;
 char st[50][50];
 int bottom = 1;
-int needToClose = 0;
+int isEntrada = 0;
 
 int main(int argc, char *argv[])
 {
@@ -191,30 +190,19 @@ push_var(char* varName)
 push_inc(char* varName)
 {
     fprintf(f1,"    %s++;\n",varName);
-    if(needToClose == 1)
-    {
-        fprintf(f1,"    }\n");
-        needToClose = 0;
-    }
 }
 
 push_zera(char* varName)
 {
     fprintf(f1,"    %s=0;\n",varName);
-    if(needToClose == 1)
-    {
-        fprintf(f1,"    }\n");
-        needToClose = 0;
-    }
 }
 
 push_enq(char* varName)
 {
     fprintf(f1,"    for(int i = 0;i < %s;i++)\n    {\n",varName);
-    if(needToClose == 1)
-    {
-        fprintf(f1,"    }\n");
-        needToClose = 0;
-    }
-    needToClose = 1;
+}
+
+push_fim()
+{
+    fprintf(f1,"    }\n");
 }

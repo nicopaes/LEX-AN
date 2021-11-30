@@ -3,13 +3,14 @@
 int main()
 {
     int X = 0;
-    int Y = 0;
     int Z = 0;
-    Z = Y;
     X++;
     X++;
-    Z++;
     for(int i = 0;i < X;i++)
     {
+    X++;
+    X++;
+    }
+    Z = X;
     return Z;
 }

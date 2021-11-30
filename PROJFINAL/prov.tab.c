@@ -471,16 +471,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   31
+#define YYLAST   30
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  16
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  6
+#define YYNNTS  7
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  11
+#define YYNRULES  12
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  31
+#define YYNSTATES  32
 
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   270
@@ -529,8 +529,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    36,    36,    44,    43,    49,    58,    58,    61,    67,
-      74,    79
+       0,    36,    36,    44,    43,    49,    58,    58,    62,    61,
+      69,    76,    82
 };
 #endif
 
@@ -541,7 +541,7 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "ENTRADA", "id", "SAIDA", "FIM", "FACA",
   "INC", "ZERA", "ENQUANTO", "COMMA", "LPAR", "RPAR", "EQUAL", "END",
-  "$accept", "Program", "varlist", "$@1", "cmds", "cmd", YY_NULLPTR
+  "$accept", "Program", "varlist", "$@1", "cmds", "cmd", "$@2", YY_NULLPTR
 };
 #endif
 
@@ -569,10 +569,10 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       1,     4,     9,     0,     7,   -17,     2,     4,     4,    -3,
-     -17,     3,     6,     8,    10,    11,    -3,    12,    15,    17,
-      16,   -17,   -17,   -17,    14,    18,    -3,   -17,   -17,    19,
-     -17
+       1,     4,     9,    -1,     6,   -17,     3,     4,     4,    -3,
+     -17,    -2,     5,     7,    11,     8,    -3,    12,    14,    16,
+      15,   -17,   -17,   -17,    13,    17,   -17,   -17,   -17,    -3,
+      18,   -17
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -582,20 +582,20 @@ static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     5,     0,     1,     0,     0,     0,     0,
        4,     0,     0,     0,     0,     0,     7,     0,     0,     0,
-       0,     2,     6,     9,     0,     0,     0,    10,    11,     0,
-       8
+       0,     2,     6,    10,     0,     0,     8,    11,    12,     0,
+       0,     9
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -17,   -17,    -5,   -17,   -16,   -17
+     -17,   -17,    -5,   -17,   -16,   -17,   -17
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     4,     6,    15,    16
+      -1,     2,     4,     6,    15,    16,    29
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -604,17 +604,17 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yytable[] =
 {
       22,    11,     9,    10,     1,    12,    13,    14,     3,     5,
-      29,    -3,     7,     8,    20,     0,    23,    17,    18,    24,
-      19,    25,     0,    26,     0,    30,    21,    27,     0,     0,
-       0,    28
+      -3,     7,    17,    30,     8,    20,    23,    18,    24,    19,
+      25,     0,    26,    21,    31,     0,    27,     0,     0,     0,
+      28
 };
 
 static const yytype_int8 yycheck[] =
 {
       16,     4,     7,     8,     3,     8,     9,    10,     4,     0,
-      26,    11,     5,    11,     4,    -1,     4,    14,    12,     4,
-      12,     4,    -1,     7,    -1,     6,    15,    13,    -1,    -1,
-      -1,    13
+      11,     5,    14,    29,    11,     4,     4,    12,     4,    12,
+       4,    -1,     7,    15,     6,    -1,    13,    -1,    -1,    -1,
+      13
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -623,22 +623,22 @@ static const yytype_int8 yystos[] =
 {
        0,     3,    17,     4,    18,     0,    19,     5,    11,    18,
       18,     4,     8,     9,    10,    20,    21,    14,    12,    12,
-       4,    15,    20,     4,     4,     4,     7,    13,    13,    20,
-       6
+       4,    15,    20,     4,     4,     4,     7,    13,    13,    22,
+      20,     6
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    16,    17,    19,    18,    18,    20,    20,    21,    21,
-      21,    21
+       0,    16,    17,    19,    18,    18,    20,    20,    22,    21,
+      21,    21,    21
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     6,     0,     4,     1,     2,     1,     5,     3,
-       4,     4
+       0,     2,     6,     0,     4,     1,     2,     1,     0,     6,
+       3,     4,     4
 };
 
 
@@ -1368,14 +1368,21 @@ yyreduce:
   case 8:
 #line 62 "prov.y"
 {
-    char* idvar = (yyvsp[-3].name);
+    char* idvar = (yyvsp[-1].name);
     push_enq(idvar);
+    printf("|||||||||||  %s",idvar);
 }
-#line 1375 "prov.tab.c"
+#line 1376 "prov.tab.c"
     break;
 
   case 9:
-#line 68 "prov.y"
+#line 66 "prov.y"
+           {push_fim();}
+#line 1382 "prov.tab.c"
+    break;
+
+  case 10:
+#line 70 "prov.y"
 {
     char* id1var = (yyvsp[-2].name);
     char* id2var = (yyvsp[0].name);
@@ -1383,30 +1390,31 @@ yyreduce:
     push_attrib(id1var,id2var);
 
 }
-#line 1387 "prov.tab.c"
-    break;
-
-  case 10:
-#line 75 "prov.y"
-{
-    char* idVar = (yyvsp[-1].name);
-    push_inc(idVar);
-
-}
-#line 1397 "prov.tab.c"
+#line 1394 "prov.tab.c"
     break;
 
   case 11:
-#line 80 "prov.y"
+#line 77 "prov.y"
+{
+    char* idVar = (yyvsp[-1].name);
+    printf("INC: %s++\n", idVar);
+    push_inc(idVar);
+
+}
+#line 1405 "prov.tab.c"
+    break;
+
+  case 12:
+#line 83 "prov.y"
 {
     char* idVar = (yyvsp[-1].name);
     push_inc(idVar);
 }
-#line 1406 "prov.tab.c"
+#line 1414 "prov.tab.c"
     break;
 
 
-#line 1410 "prov.tab.c"
+#line 1418 "prov.tab.c"
 
       default: break;
     }
@@ -1638,7 +1646,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 85 "prov.y"
+#line 88 "prov.y"
 
 
 int top = 0;
@@ -1744,30 +1752,19 @@ push_var(char* varName)
 push_inc(char* varName)
 {
     fprintf(f1,"    %s++;\n",varName);
-    if(needToClose == 1)
-    {
-        fprintf(f1,"    }\n");
-        needToClose = 0;
-    }
 }
 
 push_zera(char* varName)
 {
     fprintf(f1,"    %s=0;\n",varName);
-    if(needToClose == 1)
-    {
-        fprintf(f1,"    }\n");
-        needToClose = 0;
-    }
 }
 
 push_enq(char* varName)
 {
     fprintf(f1,"    for(int i = 0;i < %s;i++)\n    {\n",varName);
-    if(needToClose == 1)
-    {
-        fprintf(f1,"    }\n");
-        needToClose = 0;
-    }
-    needToClose = 1;
+}
+
+push_fim()
+{
+    fprintf(f1,"    }\n");
 }
