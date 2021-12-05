@@ -13,7 +13,10 @@ int lineno = 1; // initialize to 1
 %}
 
 %%
+%option yylineno;
 
+[ \t]		;
+[ \n]   { lineno = lineno + 1;}
 ENTRADA { return ENTRADA; }
 SAIDA { return SAIDA; }
 FIM { return FIM; }
@@ -30,10 +33,9 @@ ENQUANTO {return ENQUANTO; }
     yylval.name = strdup(yytext);
     insert(yytext,strlen(yytext),0,lineno);
     return id; }
-
-[ \t\r\n]+ { /* eat whitespace */ }
+\/\/.* ;
+\/\*(.*\n)*.*\*\/ ;
 .           printf("unexpected %s \n", yytext);
-"\n"            { lineno += 1; }
 %%
 
 void ret_print(char *token_type){

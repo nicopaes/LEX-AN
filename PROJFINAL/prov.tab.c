@@ -72,15 +72,17 @@
   #include "hash.c"
   #include "prov.tab.h"
   #include <stdlib.h>
+  #define YYERROR_VERBOSE 1
   extern char *yytext;
   extern FILE *yyin;
   extern FILE *yyout;
   extern int yyparse();
   extern int yylex();
   extern int lineno;
+  extern int yylineno;
   
 
-#line 84 "prov.tab.c"
+#line 86 "prov.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -111,13 +113,10 @@
 # define YYERROR_VERBOSE 0
 #endif
 
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_PROV_TAB_H_INCLUDED
-# define YY_YY_PROV_TAB_H_INCLUDED
+
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -148,11 +147,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 30 "prov.y"
+#line 32 "prov.y"
 
     char* name;
 
-#line 156 "prov.tab.c"
+#line 155 "prov.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -165,7 +164,7 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_PROV_TAB_H_INCLUDED  */
+
 
 
 
@@ -529,8 +528,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    36,    36,    36,    36,    44,    43,    49,    58,    58,
-      62,    61,    68,    75,    81
+       0,    38,    38,    38,    38,    46,    45,    51,    60,    60,
+      64,    63,    70,    77,    83
 };
 #endif
 
@@ -1333,66 +1332,66 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 36 "prov.y"
+#line 38 "prov.y"
                  {change_isEntrada(1);}
-#line 1339 "prov.tab.c"
+#line 1338 "prov.tab.c"
     break;
 
   case 3:
-#line 36 "prov.y"
+#line 38 "prov.y"
                                                       {change_isEntrada(0);}
-#line 1345 "prov.tab.c"
+#line 1344 "prov.tab.c"
     break;
 
   case 4:
-#line 37 "prov.y"
+#line 39 "prov.y"
 {
     printf("Compilação sucesso\n");
     char* idvar = (yyvsp[-2].name);
     push_ret(idvar);
 }
-#line 1355 "prov.tab.c"
+#line 1354 "prov.tab.c"
     break;
 
   case 5:
-#line 44 "prov.y"
+#line 46 "prov.y"
 {    
     char* idvar = (yyvsp[0].name);
     printf("----->>>>>>ID %s\n", idvar);
     push_var(idvar);
     //$$ = $1
 }
-#line 1366 "prov.tab.c"
+#line 1365 "prov.tab.c"
     break;
 
   case 7:
-#line 50 "prov.y"
+#line 52 "prov.y"
 {    
     char* idvar = (yyvsp[0].name);
     printf("----->>>>>>ID %s\n", idvar);
     push_var(idvar);
     //$$ = $1
 }
-#line 1377 "prov.tab.c"
+#line 1376 "prov.tab.c"
     break;
 
   case 10:
-#line 62 "prov.y"
+#line 64 "prov.y"
 {
     char* idvar = (yyvsp[-1].name);
     push_enq(idvar);
 }
-#line 1386 "prov.tab.c"
+#line 1385 "prov.tab.c"
     break;
 
   case 11:
-#line 65 "prov.y"
+#line 67 "prov.y"
            {push_fim();}
-#line 1392 "prov.tab.c"
+#line 1391 "prov.tab.c"
     break;
 
   case 12:
-#line 69 "prov.y"
+#line 71 "prov.y"
 {
     char* id1var = (yyvsp[-2].name);
     char* id2var = (yyvsp[0].name);
@@ -1400,31 +1399,31 @@ yyreduce:
     push_attrib(id1var,id2var);
 
 }
-#line 1404 "prov.tab.c"
+#line 1403 "prov.tab.c"
     break;
 
   case 13:
-#line 76 "prov.y"
+#line 78 "prov.y"
 {
     char* idVar = (yyvsp[-1].name);
     printf("INC: %s++\n", idVar);
     push_inc(idVar);
 
 }
-#line 1415 "prov.tab.c"
+#line 1414 "prov.tab.c"
     break;
 
   case 14:
-#line 82 "prov.y"
+#line 84 "prov.y"
 {
     char* idVar = (yyvsp[-1].name);
     push_zera(idVar);
 }
-#line 1424 "prov.tab.c"
+#line 1423 "prov.tab.c"
     break;
 
 
-#line 1428 "prov.tab.c"
+#line 1427 "prov.tab.c"
 
       default: break;
     }
@@ -1656,7 +1655,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 87 "prov.y"
+#line 89 "prov.y"
 
 
 int top = 0;
@@ -1670,10 +1669,11 @@ char* retVar;
 int main(int argc, char *argv[])
 {
     #ifdef YYDEBUG
-        yydebug = 1;
+        yydebug = 0;
     #endif
     // bison -d prov.y && flex prov.l && gcc -o provolone prov.tab.c lex.yy.c && ./provolone teste.prov
     // bison -t -d prov.y && flex -d prov.l && gcc -w -o provolone prov.tab.c lex.yy.c && ./provolone teste.prov
+    // bison prov.y && flex prov.l && gcc -w -o provolone prov.tab.c lex.yy.c && ./provolone teste.prov
     // initialize symbol table
 	init_hash_table();
 
@@ -1687,11 +1687,13 @@ int main(int argc, char *argv[])
     if(!yyparse())
     {
         printf("Parsing done\n");
+        symtab_print();
         push_end();
     }
     else
     {
         printf("Parsing error\n");
+        exit(0);
     }
 
     fclose(yyin);
@@ -1703,7 +1705,9 @@ int main(int argc, char *argv[])
 
 int yyerror(char *s)
 {
-  fprintf(stderr, "error: %s\n Line %d\n", s, lineno);
+  //fprintf(stderr, "ERROR: %s\n Line %d\n", s, lineno);
+  printf("ERROR: %s\n", s);
+  exit(1);
 }
 
 push()
@@ -1718,6 +1722,9 @@ push_s(char* s)
 
 push_attrib(char* var1Name, char* var2Name)
 {
+    check_wasDclr(var1Name);
+    check_wasDclr(var2Name);
+    
     fprintf(f1,"    %s = %s;\n",var1Name,var2Name);
 }
 
@@ -1771,6 +1778,7 @@ push_var(char* varName)
 
 push_inc(char* varName)
 {
+    check_wasDclr(varName);
     fprintf(f1,"    %s++;\n",varName);
 }
 
@@ -1781,6 +1789,7 @@ push_zera(char* varName)
 
 push_enq(char* varName)
 {
+    check_wasDclr(varName);
     fprintf(f1,"    int i = %s;\n", varName);
     fprintf(f1,"    while(i != 0)\n    {\n\n",varName);
 }
@@ -1798,4 +1807,15 @@ push_retVar(char* varName)
 change_isEntrada(int value)
 {
     isEntrada = value;
+}
+
+check_wasDclr(char* varName)
+{
+    list_t* l = lookup(varName);
+    if(l == NULL || !l->st_dclr)
+    {        
+        const char* errorStr = malloc(50*sizeof(char));
+        sprintf(errorStr,"Variable %s not declared on line %d",varName, lineno);
+        yyerror(errorStr);
+    }
 }

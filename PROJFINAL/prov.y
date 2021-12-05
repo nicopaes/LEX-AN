@@ -3,12 +3,14 @@
   #include "hash.c"
   #include "prov.tab.h"
   #include <stdlib.h>
+  #define YYERROR_VERBOSE 1
   extern char *yytext;
   extern FILE *yyin;
   extern FILE *yyout;
   extern int yyparse();
   extern int yylex();
   extern int lineno;
+  extern int yylineno;
   %}
 %start Program
 %token ENTRADA
@@ -97,10 +99,11 @@ char* retVar;
 int main(int argc, char *argv[])
 {
     #ifdef YYDEBUG
-        yydebug = 1;
+        yydebug = 0;
     #endif
     // bison -d prov.y && flex prov.l && gcc -o provolone prov.tab.c lex.yy.c && ./provolone teste.prov
     // bison -t -d prov.y && flex -d prov.l && gcc -w -o provolone prov.tab.c lex.yy.c && ./provolone teste.prov
+    // bison prov.y && flex prov.l && gcc -w -o provolone prov.tab.c lex.yy.c && ./provolone teste.prov
     // initialize symbol table
 	init_hash_table();
 
@@ -114,11 +117,13 @@ int main(int argc, char *argv[])
     if(!yyparse())
     {
         printf("Parsing done\n");
+        symtab_print();
         push_end();
     }
     else
     {
         printf("Parsing error\n");
+        exit(0);
     }
 
     fclose(yyin);
@@ -130,7 +135,9 @@ int main(int argc, char *argv[])
 
 int yyerror(char *s)
 {
-  fprintf(stderr, "error: %s\n Line %d\n", s, lineno);
+  //fprintf(stderr, "ERROR: %s\n Line %d\n", s, lineno);
+  printf("ERROR: %s\n", s);
+  exit(1);
 }
 
 push()
@@ -145,6 +152,9 @@ push_s(char* s)
 
 push_attrib(char* var1Name, char* var2Name)
 {
+    check_wasDclr(var1Name);
+    check_wasDclr(var2Name);
+    
     fprintf(f1,"    %s = %s;\n",var1Name,var2Name);
 }
 
@@ -198,6 +208,7 @@ push_var(char* varName)
 
 push_inc(char* varName)
 {
+    check_wasDclr(varName);
     fprintf(f1,"    %s++;\n",varName);
 }
 
@@ -208,6 +219,7 @@ push_zera(char* varName)
 
 push_enq(char* varName)
 {
+    check_wasDclr(varName);
     fprintf(f1,"    int i = %s;\n", varName);
     fprintf(f1,"    while(i != 0)\n    {\n\n",varName);
 }
@@ -225,4 +237,15 @@ push_retVar(char* varName)
 change_isEntrada(int value)
 {
     isEntrada = value;
+}
+
+check_wasDclr(char* varName)
+{
+    list_t* l = lookup(varName);
+    if(l == NULL || !l->st_dclr)
+    {        
+        const char* errorStr = malloc(50*sizeof(char));
+        sprintf(errorStr,"Variable %s not declared on line %d",varName, lineno);
+        yyerror(errorStr);
+    }
 }

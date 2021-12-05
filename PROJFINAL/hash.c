@@ -34,7 +34,7 @@ void insert(char *name, int len, int type, int lineno){
         l->next = hash_table[hashval];
         l->st_dclr = 0;
         hash_table[hashval] = l; 
-        printf("Inserted %s for the first time\n", name); // error checking
+        printf("Inserted %s for the first time at line %d\n", name, lineno); // error checking
     }
     /* found in table, so just add line number */
     else{
@@ -44,7 +44,7 @@ void insert(char *name, int len, int type, int lineno){
         t->next = (RefList*) malloc(sizeof(RefList));
         t->next->lineno = lineno;
         t->next->next = NULL;
-        printf("Found %s again at line\n", name);
+        printf("Found %s again at line %d\n", name,lineno);
     }
 }
  
@@ -118,9 +118,9 @@ void symtab_dump(FILE * of){
 /* print to stdout by default */ 
 void symtab_print(){  
   int i;
-  printf("------------ ----- ----------\n");
-  printf("Name         Type   Value\n");
-  printf("------------ ----- ----------\n");
+  printf("------------ ----- ----------  ----------\n");
+  printf("Name         Type  WasDclr\n");
+  printf("------------ ----- ----------  ----------\n");
   for (i=0; i < SIZE; ++i){ 
     if (hash_table[i] != NULL){ 
         list_t *l = hash_table[i];
@@ -147,10 +147,18 @@ void symtab_print(){
             //     else printf("%-7s","undef");
             // }
             //else printf("%-7s","undef"); // if UNDEF or 0
-            // while (t != NULL){
-            //     printf("%4d ",t->lineno);
-            // t = t->next;
-            // }
+            if(l->st_dclr)
+            {
+                printf("TRUE");
+            }
+            else 
+            {
+                printf("FALSE");
+            }
+            while (t != NULL){
+                printf("%4d ",t->lineno);
+            t = t->next;
+            }
             printf("\n");
             l = l->next;
         }
