@@ -35,7 +35,11 @@ ENQUANTO {return ENQUANTO; }
     return id; }
 \/\/.* ;
 \/\*(.*\n)*.*\*\/ ;
-.           printf("unexpected %s \n", yytext);
+.           {
+                const char* errorStr = malloc(50*sizeof(char));
+                sprintf(errorStr,"Unexpected char %s",yytext, lineno);
+                yyerror(errorStr);
+            }
 %%
 
 void ret_print(char *token_type){

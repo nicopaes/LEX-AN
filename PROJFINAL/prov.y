@@ -3,7 +3,7 @@
   #include "hash.c"
   #include "prov.tab.h"
   #include <stdlib.h>
-  #define YYERROR_VERBOSE 1
+  #define YYERROR_VERBOSE 0
   #define BISON_VERBOSE 1
   extern char *yytext;
   extern FILE *yyin;
@@ -106,6 +106,7 @@ int isEntrada = 0;
 char* retVar;
 int errorCompilation;
 int lineErrors[50];
+int notSintaxError = 0;
 
 int main(int argc, char *argv[])
 {
@@ -158,8 +159,16 @@ int main(int argc, char *argv[])
 
 int yyerror(char *s)
 {
-  //fprintf(stderr, "ERROR: %s\n Line %d\n", s, lineno);
-  printf("ERROR: %s\n", s);
+  
+  if(notSintaxError == 1)
+  {
+      printf("ERROR: %s\n", s);
+  }
+  else
+  {
+      fprintf(stderr, "ERROR: %s - Line %d\n", s, lineno);
+  }
+  
   errorCompilation = 1;
   add_lineErrors();
   //exit(1);
@@ -278,6 +287,7 @@ check_wasDclr(char* varName)
     {        
         const char* errorStr = malloc(50*sizeof(char));
         sprintf(errorStr,"Variable %s not declared on line %d",varName, lineno);
+        notSintaxError = 1;
         yyerror(errorStr);
     }
 }

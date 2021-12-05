@@ -871,14 +871,18 @@ YY_RULE_SETUP
 case 19:
 YY_RULE_SETUP
 #line 38 "prov.l"
-printf("unexpected %s \n", yytext);
+{
+                const char* errorStr = malloc(50*sizeof(char));
+                sprintf(errorStr,"Unexpected char %s",yytext, lineno);
+                yyerror(errorStr);
+            }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 39 "prov.l"
+#line 43 "prov.l"
 ECHO;
 	YY_BREAK
-#line 881 "lex.yy.c"
+#line 885 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1883,7 +1887,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 39 "prov.l"
+#line 43 "prov.l"
 
 
 void ret_print(char *token_type){

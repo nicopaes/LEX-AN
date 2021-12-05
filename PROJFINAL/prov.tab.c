@@ -72,7 +72,7 @@
   #include "hash.c"
   #include "prov.tab.h"
   #include <stdlib.h>
-  #define YYERROR_VERBOSE 1
+  #define YYERROR_VERBOSE 0
   #define BISON_VERBOSE 1
   extern char *yytext;
   extern FILE *yyin;
@@ -489,7 +489,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   25
+#define YYLAST   27
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  16
@@ -590,9 +590,9 @@ static const yytype_int16 yytoknum[] =
 static const yytype_int8 yypact[] =
 {
        1,   -19,     8,     5,   -19,    -1,     6,     3,   -19,     5,
-       5,   -19,    -3,    -2,     4,     7,    11,     2,    -3,    14,
-      16,    17,    15,   -19,   -19,   -19,    10,    12,   -19,   -19,
-     -19,    -3,    18,   -19
+       5,   -19,    -3,    -2,     4,     7,    11,    12,    -3,    13,
+      16,    17,    15,   -19,   -19,   -19,    10,    14,   -19,   -19,
+     -19,    -3,     9,   -19
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -624,15 +624,15 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yytable[] =
 {
       24,    13,    11,    12,     1,    14,    15,    16,     4,     5,
-      -5,     8,    19,    32,     9,    22,    20,    23,    25,    21,
-      26,    27,    28,    29,    33,    30
+      -5,     8,    19,    32,     9,    22,    20,    25,    23,    21,
+      26,    27,    28,    29,    33,     0,     0,    30
 };
 
 static const yytype_int8 yycheck[] =
 {
       18,     4,     9,    10,     3,     8,     9,    10,     0,     4,
-      11,     5,    14,    31,    11,     4,    12,    15,     4,    12,
-       4,     4,     7,    13,     6,    13
+      11,     5,    14,    31,    11,     4,    12,     4,     6,    12,
+       4,     4,     7,    13,    15,    -1,    -1,    13
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -641,8 +641,8 @@ static const yytype_int8 yystos[] =
 {
        0,     3,    17,    18,     0,     4,    20,    21,     5,    11,
       19,    20,    20,     4,     8,     9,    10,    22,    23,    14,
-      12,    12,     4,    15,    22,     4,     4,     4,     7,    13,
-      13,    24,    22,     6
+      12,    12,     4,     6,    22,     4,     4,     4,     7,    13,
+      13,    24,    22,    15
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -1794,6 +1794,7 @@ int isEntrada = 0;
 char* retVar;
 int errorCompilation;
 int lineErrors[50];
+int notSintaxError = 0;
 
 int main(int argc, char *argv[])
 {
@@ -1846,8 +1847,16 @@ int main(int argc, char *argv[])
 
 int yyerror(char *s)
 {
-  //fprintf(stderr, "ERROR: %s\n Line %d\n", s, lineno);
-  printf("ERROR: %s\n", s);
+  
+  if(notSintaxError == 1)
+  {
+      printf("ERROR: %s\n", s);
+  }
+  else
+  {
+      fprintf(stderr, "ERROR: %s - Line %d\n", s, lineno);
+  }
+  
   errorCompilation = 1;
   add_lineErrors();
   //exit(1);
@@ -1966,6 +1975,7 @@ check_wasDclr(char* varName)
     {        
         const char* errorStr = malloc(50*sizeof(char));
         sprintf(errorStr,"Variable %s not declared on line %d",varName, lineno);
+        notSintaxError = 1;
         yyerror(errorStr);
     }
 }
