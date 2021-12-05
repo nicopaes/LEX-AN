@@ -38,7 +38,7 @@
 %%
 
 
-Program: ENTRADA {change_isEntrada(1);} varlist SAIDA {change_isEntrada(0);} varlist cmds END
+Program: ENTRADA {change_isEntrada(1);} varlist SAIDA {change_isEntrada(0);} varlist cmds FIM
 {
     char* idvar = $<name>6;
     push_ret(idvar);
@@ -64,7 +64,7 @@ cmd: ENQUANTO id FACA
 {
     char* idvar = $2;
     push_enq(idvar);
-} cmds FIM {push_fim();}
+} cmds END {push_fim();}
 ;
 //------------
 cmd: id EQUAL id 
