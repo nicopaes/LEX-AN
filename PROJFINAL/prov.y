@@ -4,6 +4,7 @@
   #include "prov.tab.h"
   #include <stdlib.h>
   #define YYERROR_VERBOSE 1
+  #define BISON_VERBOSE 1
   extern char *yytext;
   extern FILE *yyin;
   extern FILE *yyout;
@@ -11,21 +12,23 @@
   extern int yylex();
   extern int lineno;
   extern int yylineno;
+  extern int charn;
   %}
 %start Program
-%token ENTRADA
-%token id
-%token SAIDA
-%token FIM
-%token FACA
-%token INC
-%token ZERA
-%token ENQUANTO
-%token COMMA
-%token LPAR
-%token RPAR
-%right EQUAL
-%token END
+%token ENTRADA "ENTRADA"
+%token id "Variable"
+%token SAIDA "SAIDA"
+%token FIM "FIM"
+%token FACA "FACA"
+%token INC "INC"
+%token ZERA "ZERA"
+%token ENQUANTO "ENQUANTO"
+%token COMMA ","
+%token LPAR "("
+%token RPAR ")"
+%token EQUAL "="
+%token END "End of Program"
+%locations 
 
 %type <name> id
 %union 
@@ -37,21 +40,18 @@
 
 Program: ENTRADA {change_isEntrada(1);} varlist SAIDA {change_isEntrada(0);} varlist cmds END
 {
-    printf("Compilação sucesso\n");
     char* idvar = $<name>6;
     push_ret(idvar);
 };
-//------------ TODO AIDA varlist{push_var();}
+//------------
 varlist: id 
 {    
     char* idvar = $1;
-    printf("----->>>>>>ID %s\n", idvar);
     push_var(idvar);
     //$$ = $1
 } COMMA varlist | id 
 {    
     char* idvar = $1;
-    printf("----->>>>>>ID %s\n", idvar);
     push_var(idvar);
     //$$ = $1
 }
@@ -71,18 +71,28 @@ cmd: id EQUAL id
 {
     char* id1var = $1;
     char* id2var = $3;
-    printf("ATTRIB: %s = %s\n", id1var,id2var);
+    if(BISON_VERBOSE)
+    {
+        printf("ATTRIB: %s = %s\n", id1var,id2var);
+    }
     push_attrib(id1var,id2var);
 
 } | INC LPAR id RPAR
 {
     char* idVar = $3;
-    printf("INC: %s++\n", idVar);
+    if(BISON_VERBOSE)
+    {
+        printf("INC: %s++\n", idVar);
+    }
     push_inc(idVar);
 
 } | ZERA LPAR id RPAR
 {
     char* idVar = $3;
+    if(BISON_VERBOSE)
+    {
+        printf("ZERA: %s\n", idVar);
+    }
     push_zera(idVar);
 }
 ;
@@ -94,7 +104,8 @@ char st[50][50];
 int bottom = 1;
 int isEntrada = 0;
 char* retVar;
-
+int errorCompilation;
+int lineErrors[50];
 
 int main(int argc, char *argv[])
 {
@@ -106,18 +117,30 @@ int main(int argc, char *argv[])
     // bison prov.y && flex prov.l && gcc -w -o provolone prov.tab.c lex.yy.c && ./provolone teste.prov
     // initialize symbol table
 	init_hash_table();
+    init_lineErrors();
 
     int parse;
     // open input file
     yyin = fopen(argv[1], "r");
     f1 = fopen("output.c","w");
+    //
     push_start();
 
     // sintax analysis
     if(!yyparse())
     {
         printf("Parsing done\n");
-        symtab_print();
+        if(errorCompilation > 0)
+        {
+            printf("Compilation errors\n");
+            print_lineErrors();
+            printf("Symbol Table\n");
+            symtab_print();
+        }
+        else
+        {
+            printf("Compilation done, no errors\n");
+        }
         push_end();
     }
     else
@@ -137,7 +160,9 @@ int yyerror(char *s)
 {
   //fprintf(stderr, "ERROR: %s\n Line %d\n", s, lineno);
   printf("ERROR: %s\n", s);
-  exit(1);
+  errorCompilation = 1;
+  add_lineErrors();
+  //exit(1);
 }
 
 push()
@@ -176,7 +201,10 @@ push_start()
 
 push_var(char* varName)
 { 
-    printf("VAR NAME : %s\n", varName);
+    if(BISON_VERBOSE)
+    {       
+        printf("VAR NAME : %s\n", varName); 
+    }
     list_t* l = lookup(varName);
     if(l != NULL)
     {
@@ -197,12 +225,15 @@ push_var(char* varName)
         
         if(changeWasDclr(varName))
         {
-            printf("Variable declared\n");
+            if(BISON_VERBOSE)
+            {
+               printf("Variable declared\n"); 
+            }            
         }
     }
     else
     {
-        printf("ERROR\n");
+        printf("ERROR: Variable not found at symbtab\n");
     }
 }
 
@@ -214,6 +245,7 @@ push_inc(char* varName)
 
 push_zera(char* varName)
 {
+    check_wasDclr(varName);
     fprintf(f1,"    %s=0;\n",varName);
 }
 
@@ -247,5 +279,37 @@ check_wasDclr(char* varName)
         const char* errorStr = malloc(50*sizeof(char));
         sprintf(errorStr,"Variable %s not declared on line %d",varName, lineno);
         yyerror(errorStr);
+    }
+}
+
+init_lineErrors()
+{
+    for(int i =0; i<50;i++)
+    {
+        lineErrors[i] = -1;
+    }
+}
+
+add_lineErrors()
+{
+    for(int i =0; i<50;i++)
+    {
+        if(lineErrors[i] == -1)
+        {
+            lineErrors[i] = lineno;
+            return;
+        }
+    }
+    printf("Reached the limit of recording errors\n");
+}
+
+print_lineErrors()
+{
+    for(int i =0; i<50;i++)
+    {
+        if(lineErrors[i] != -1)
+        {
+           printf("Error in line %d\n",lineErrors[i]); 
+        }
     }
 }

@@ -29,7 +29,7 @@ ENQUANTO {return ENQUANTO; }
 "(" {return LPAR; }
 ")" {return RPAR;}
 "=" {return EQUAL;}
-[A-Z] { 
+[a-zA-Z]([a-zA-Z]|[0-9])* { 
     yylval.name = strdup(yytext);
     insert(yytext,strlen(yytext),0,lineno);
     return id; }

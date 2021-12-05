@@ -1,5 +1,5 @@
 ENTRADA X, Y
 SAIDA Z
-INC(X)
-Z=X
+INC(Y)
+Z=Y
 END

@@ -6,23 +6,13 @@ int main()
     printf("Entre com o valor de X \n");
     scanf("%d",&X);
     printf("Valor de X lido %d\n",X);
-    int Z;
-    printf("Entre com o valor de Z \n");
-    scanf("%d",&Z);
-    printf("Valor de Z lido %d\n",Z);
-    X++;
-    X++;
-    int i = X;
-    while(i != 0)
-    {
-
-    X++;
-    X++;
-    X++;
-    i--;
-    }
-    X=0;
-    Z = X;
-    printf("Resultado final %d\n",X);
-    return X;
+    int Y;
+    printf("Entre com o valor de Y \n");
+    scanf("%d",&Y);
+    printf("Valor de Y lido %d\n",Y);
+    int Z = 0;
+    Y++;
+    Z = Y;
+    printf("Resultado final %d\n",Z);
+    return Z;
 }
