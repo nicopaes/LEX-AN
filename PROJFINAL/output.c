@@ -12,3 +12,7 @@ int main()
     printf("Valor de Y lido %d\n",Y);
     int Z = 0;
     Y++;
+    Z = Z;
+    printf("Resultado final %d\n",Z);
+    return Z;
+}

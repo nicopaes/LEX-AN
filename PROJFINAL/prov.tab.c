@@ -1831,6 +1831,7 @@ int main(int argc, char *argv[])
             printf("Compilation done, no errors\n");
         }
         push_end();
+        print_notUsed();
     }
     else
     {
@@ -1862,6 +1863,11 @@ int yyerror(char *s)
   //exit(1);
 }
 
+yywarn(char*s)
+{
+    printf("WARNING: %s\n", s);
+}
+
 push()
 {
     fprintf(f1,"%s\n",yytext);
@@ -1876,7 +1882,12 @@ push_attrib(char* var1Name, char* var2Name)
 {
     check_wasDclr(var1Name);
     check_wasDclr(var2Name);
-    
+    if(strcmp(var1Name,var2Name) == 0)
+    {
+        const char* errorStr = malloc(50*sizeof(char));
+        sprintf(errorStr,"Attributing the variable %s to itself at line %d",var1Name,lineno);
+        yywarn(errorStr);
+    }
     fprintf(f1,"    %s = %s;\n",var1Name,var2Name);
 }
 
@@ -2010,4 +2021,33 @@ print_lineErrors()
            printf("Error in line %d\n",lineErrors[i]); 
         }
     }
+}
+
+/* print to stdout by default */ 
+void print_notUsed(){  
+  int i;
+  int linesUsed = 0;
+  for (i=0; i < SIZE; ++i){ 
+    linesUsed = 0;
+    if (hash_table[i] != NULL){ 
+        list_t *l = hash_table[i];
+        while (l != NULL)
+        { 
+            RefList *t = l->lines;            
+            while (t != NULL)
+            {
+                t = t->next;
+                linesUsed++;
+            }
+            if(linesUsed == 1 && l->st_dclr == 1)
+            {
+                const char* warnStr = malloc(50*sizeof(char));
+                const char* name = l->st_name;
+                sprintf(warnStr,"Variable %s was declared but not used",name);
+                yywarn(warnStr);
+            }
+            l = l->next;
+        }
+    }
+  }
 }
